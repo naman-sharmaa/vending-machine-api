@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import APIRouter, Body, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
@@ -52,7 +53,7 @@ def update_item_price(
 def remove_item_from_slot(
     slot_id: str,
     item_id: str,
-    quantity: int | None = Query(None, gt=0),
+    quantity: Optional[int] = Query(None, gt=0),
     db: Session = Depends(get_db),
 ):
     try:
@@ -69,7 +70,7 @@ def remove_item_from_slot(
 @router.delete("/slots/{slot_id}/items", response_model=MessageResponse)
 def bulk_remove_items(
     slot_id: str,
-    body: BulkRemoveBody | None = Body(None),
+    body: Optional[BulkRemoveBody] = Body(None),
     db: Session = Depends(get_db),
 ):
     item_ids = body.item_ids if body else None

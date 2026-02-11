@@ -1,3 +1,4 @@
+from typing import Optional
 from sqlalchemy.orm import Session
 
 from app.config import settings
@@ -23,7 +24,7 @@ def list_slots(db: Session) -> list[Slot]:
     return db.query(Slot).all()
 
 
-def get_slot_by_id(db: Session, slot_id: str) -> Slot | None:
+def get_slot_by_id(db: Session, slot_id: str) -> Optional[Slot]:
     return db.query(Slot).filter(Slot.id == slot_id).first()
 
 

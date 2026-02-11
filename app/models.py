@@ -22,7 +22,7 @@ class Slot(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    items = relationship("Item", back_populates="slot", cascade="save-update, merge")
+    items = relationship("Item", back_populates="slot", cascade="all, delete-orphan")
 
 
 class Item(Base):

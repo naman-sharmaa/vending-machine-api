@@ -18,16 +18,18 @@ def purchase(data: PurchaseRequest, db: Session = Depends(get_db)):
         result = purchase_service.purchase(db, data.item_id, data.cash_inserted)
         return PurchaseResponse(**result)
     except ValueError as e:
-        if e.args[0] == "item_not_found":
+        error_msg = str(e)
+        if error_msg == "item_not_found":
             raise HTTPException(status_code=404, detail="Item not found")
-        if e.args[0] == "out_of_stock":
+        if error_msg == "out_of_stock":
             raise HTTPException(
                 status_code=400,
                 detail={"error": "Item out of stock"},
             )
-        if e.args[0] == "insufficient_cash":
-            required = e.args[1]
-            inserted = e.args[2]
+        if error_msg.startswith("insufficient_cash"):
+            parts = error_msg.split("|")
+            required = int(parts[1])
+            inserted = int(parts[2])
             raise HTTPException(
                 status_code=400,
                 detail={
